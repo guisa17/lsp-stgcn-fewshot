@@ -1,0 +1,38 @@
+# Citation metadata for this repository.
+# preferred-citation is the reference to use today: the bachelor's research project at UNI.
+# When a paper or preprint describing this work is available, it becomes preferred-citation and the
+# research project entry below moves to `references`.
+cff-version: 1.2.0
+message: "If you use this code, please cite the work below."
+title: "Peruvian Sign Language Recognition via Spatio-Temporal Graph Networks with Hand Attention and Multi-User Few-Shot Calibration"
+type: software
+authors:
+  - family-names: "Salcedo Alvarez"
+    given-names: "Guillermo Ronie"
+    affiliation: "Universidad Nacional de Ingeniería"
+repository-code: "https://github.com/guisa17/lsp-stgcn-fewshot"
+url: "https://guisa17.github.io/lsp-stgcn-fewshot/"
+license: MIT
+version: 0.1.0
+keywords:
+  - Peruvian Sign Language
+  - sign language recognition
+  - graph convolutional networks
+  - few-shot learning
+  - prototypical networks
+preferred-citation:
+  type: report
+  title: "Reconocimiento de Lengua de Señas Peruana mediante Redes de Grafos Espacio-Temporales con Atención a Manos y Calibración Few-Shot Multi-Usuario"
+  notes: "Bachelor's research project, written in Spanish. English title: Peruvian Sign Language Recognition via Spatio-Temporal Graph Networks with Hand Attention and Multi-User Few-Shot Calibration."
+  authors:
+    - family-names: "Salcedo Alvarez"
+      given-names: "Guillermo Ronie"
+  institution:
+    name: "Universidad Nacional de Ingeniería"
+    city: "Lima"
+    country: "PE"
+  year: 2026
+  month: 7
+  languages:
+    - es
+  url: "https://github.com/guisa17/lsp-stgcn-fewshot"
