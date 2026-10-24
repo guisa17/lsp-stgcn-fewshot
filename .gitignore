@@ -1,0 +1,31 @@
+# Environments
+.venv/
+venv/
+.env
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Data, checkpoints and run outputs never go into git.
+# Raw LSP keypoints are personal data (they include facial landmarks).
+/data/
+/checkpoints/
+/outputs/
+*.npy
+*.npz
+*.pkl
+*.pt
+*.pth
+*.ckpt
+*.mp4
+*.avi
+*.mov
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
