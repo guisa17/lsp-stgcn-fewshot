@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Few-Shot Peruvian Sign Language Recognition with Hand-Aware Graph Networks</title>
+  <meta name="description" content="Isolated Peruvian Sign Language recognition from pose keypoints with a hand-aware graph network and few-shot calibration to new signers.">
+  <meta name="author" content="Guillermo Ronie Salcedo Alvarez">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Few-Shot Peruvian Sign Language Recognition with Hand-Aware Graph Networks">
+  <meta property="og:description" content="A frozen encoder meta-trained on Argentinian Sign Language recognizes 30 Peruvian signs from an unseen signer with 69.7 to 72.8% accuracy using 1 to 2 takes per sign.">
+  <meta property="og:image" content="https://guisa17.github.io/lsp-stgcn-fewshot/figures/og.png">
+  <meta property="og:image:alt" content="Three skeleton drawings of a person signing, with body and hands only.">
+  <meta property="og:url" content="https://guisa17.github.io/lsp-stgcn-fewshot/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+
+<header>
+  <h1>Few-Shot Peruvian Sign Language Recognition with Hand-Aware Graph Networks</h1>
+  <p class="authors">Guillermo Ronie Salcedo Alvarez</p>
+  <p class="affiliation">Universidad Nacional de Ingeniería (UNI), Lima, Peru</p>
+  <nav class="buttons" aria-label="Project links">
+    <a class="button" href="https://github.com/guisa17/lsp-stgcn-fewshot">Code</a>
+    <span class="button disabled" aria-disabled="true">Weights (soon)</span>
+    <a class="button" href="https://github.com/guisa17/lsp-stgcn-fewshot#demo">Demo</a>
+  </nav>
+</header>
+
+<figure class="teaser">
+  <img src="figures/teaser.gif" width="360" height="360"
+       alt="Animated skeleton of a signer performing HOLA, GRACIAS, AGUA and FAMILIA. Body and hands are drawn as lines and the head as a circle. Under each sign, the predicted label is shown in green and matches the true sign.">
+  <figcaption>Four signs performed by one signer, drawn from keypoints only (no video is stored and
+  the face is not drawn). Labels are predicted by a frozen encoder meta-trained on Argentinian Sign
+  Language and calibrated with 2 takes per sign of this signer. These four examples are correct
+  predictions; failure cases are shown below.</figcaption>
+</figure>
+
+<section id="abstract">
+  <h2>Abstract</h2>
+  <p>Few certified interpreters and almost no automatic tools are available to the Peruvian Deaf
+  community, which limits its access to healthcare, education and public services. We study isolated
+  sign recognition for Peruvian Sign Language (LSP) from MediaPipe Holistic keypoints, with a focus
+  on adapting to new signers from a few examples. An encoder meta-trained with Prototypical Networks
+  on LSA64 (Argentinian Sign Language) and then kept frozen recognizes 30 LSP signs from a signer it
+  has never seen with 69.7 to 72.8% accuracy, calibrated with only 1 to 2 takes per sign (chance:
+  3.3%). On unseen LSA64 signers, the same calibration reaches 98.8 to 99.5% with 1 to 4 takes per
+  sign. A linear head fine-tuned on the same takes matches or exceeds Prototypical calibration for 2
+  or more takes per sign. Trained directly on our 30-sign, two-signer LSP dataset, the encoder
+  (HA-GCN, a hand-aware graph network) reaches 98.8% test accuracy (ST-GCN 96.3%, Bi-LSTM 72.8 to
+  87.7%); this split shares signers between training and test, so it does not measure generalization
+  to new signers.</p>
+  <div class="headline">
+    <div><b>69.7–72.8%</b><span>unseen LSP signer, 1–2 takes per sign, 30 signs (chance 3.3%)</span></div>
+    <div><b>98.8–99.5%</b><span>unseen LSA64 signers, 1–4 takes per sign, 64 signs</span></div>
+    <div><b>0 updates</b><span>encoder weights are frozen during calibration; only class prototypes are computed</span></div>
+  </div>
+</section>
+
+<section id="method">
+  <h2>Method</h2>
+  <figure>
+    <img src="figures/method.png" loading="lazy"
+         onerror="this.onerror=null;this.src='figures/skeleton_graph.png';this.alt='The 73-node skeleton graph: body nodes in blue, left hand in red, right hand in green and face nodes in purple, connected by the spatial edges used by the graph network.';"
+         alt="Method overview: keypoints from MediaPipe Holistic form a 73-node skeleton graph, the HA-GCN encoder maps a take to an embedding, and class prototypes computed from K calibration takes classify new takes by nearest prototype.">
+    <figcaption>Keypoints, skeleton graph, HA-GCN encoder and few-shot calibration.</figcaption>
+  </figure>
+  <p>Each take is 30 frames of MediaPipe Holistic keypoints, mapped to a 73-node skeleton graph (11
+  body, 21 + 21 hand and 20 face nodes) and normalized per take; every node carries its coordinates,
+  its bone vector to the parent node and its frame-to-frame motion. HA-GCN alternates spatial graph
+  convolutions over a partitioned skeleton adjacency with temporal convolutions, and adds a learnable
+  adjacency term restricted to the hand nodes plus DropGraph regularization; at initialization it is
+  identical to ST-GCN. For new signers, the encoder is pre-trained and then meta-trained on LSA64 with
+  signer-disjoint episodes. At calibration time its weights stay frozen: each class prototype is the
+  mean embedding of the K calibration takes, and a test take is assigned to the nearest
+  prototype.</p>
+</section>
+
+<section id="results">
+  <h2>Results</h2>
+
+  <h3>Cross-lingual transfer: LSA64 to LSP, unseen signers</h3>
+  <p class="protocol">The HA-GCN encoders below are meta-trained on LSA64 (one per held-out LSA64
+  signer pair) and frozen; they are calibrated with K takes per sign of each LSP signer. No LSP data
+  trains the encoder. Mean ± std over 30 pooled trials, in %. Chance is 3.3%.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>LSP signer</th><th>Calibration</th><th class="n">K = 1</th><th class="n">K = 2</th><th class="n">K = 4</th><th class="n">K = 8</th></tr></thead>
+    <tbody>
+      <tr class="em"><td>signer_01 (3 takes/sign)</td><td>ProtoNet</td><td class="n">69.7 ± 2.9</td><td class="n">72.8 ± 5.0</td><td class="n">–</td><td class="n">–</td></tr>
+      <tr><td>signer_01</td><td>Fine-tune-K</td><td class="n">68.0 ± 4.1</td><td class="n">78.0 ± 5.3</td><td class="n">–</td><td class="n">–</td></tr>
+      <tr><td>signer_00 (15 takes/sign)</td><td>ProtoNet</td><td class="n">62.6 ± 3.8</td><td class="n">70.7 ± 3.6</td><td class="n">77.6 ± 2.3</td><td class="n">81.9 ± 2.1</td></tr>
+      <tr><td>signer_00</td><td>Fine-tune-K</td><td class="n">61.7 ± 3.3</td><td class="n">72.6 ± 3.2</td><td class="n">80.6 ± 1.6</td><td class="n">85.8 ± 2.4</td></tr>
+    </tbody>
+  </table></div>
+  <p>Fine-tune-K is a control baseline: a new linear layer trained on the frozen embeddings of the
+  same K takes. It matches or exceeds ProtoNet for K of 2 or more, so these experiments do not show
+  an advantage of Prototypical calibration over a simple supervised head.</p>
+  <p class="note">Errata: the original report of this project pooled four encoders for this table,
+  two of which were trained on the same LSA64 signer split. The values above use one encoder per
+  split and are recomputed from the stored per-trial results; the original values are listed in the
+  <a href="https://github.com/guisa17/lsp-stgcn-fewshot#errata-with-respect-to-the-original-report">repository README</a>.</p>
+
+  <h3>Few-shot calibration on LSA64, unseen signers</h3>
+  <p class="protocol">For each of 3 seeds, 2 of the 10 LSA64 signers are held out from
+  meta-training and used for calibration and testing. Mean ± std over 60 pooled trials, in %.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Encoder</th><th>Calibration</th><th class="n">K = 1</th><th class="n">K = 2</th><th class="n">K = 4</th></tr></thead>
+    <tbody>
+      <tr><td>ST-GCN</td><td>ProtoNet</td><td class="n">98.0 ± 1.2</td><td class="n">99.0 ± 0.7</td><td class="n">99.1 ± 1.0</td></tr>
+      <tr><td>ST-GCN</td><td>Fine-tune-K</td><td class="n">97.8 ± 1.5</td><td class="n">98.8 ± 0.8</td><td class="n">99.3 ± 0.9</td></tr>
+      <tr class="em"><td>HA-GCN</td><td>ProtoNet</td><td class="n">98.8 ± 1.0</td><td class="n">99.4 ± 0.5</td><td class="n">99.5 ± 0.8</td></tr>
+      <tr><td>HA-GCN</td><td>Fine-tune-K</td><td class="n">98.8 ± 0.8</td><td class="n">99.5 ± 0.4</td><td class="n">99.6 ± 0.7</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Supervised training on LSP, sample-level split</h3>
+  <p class="protocol">Both signers appear in training and test (378 / 81 / 81 takes), so this table
+  measures how well the 30-sign vocabulary is learned, not generalization to new signers. One seed;
+  one test error moves accuracy by about 1.2 points.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Model</th><th>Input streams</th><th class="n">Params</th><th class="n">Accuracy (%)</th><th class="n">Macro F1 (%)</th></tr></thead>
+    <tbody>
+      <tr><td>Bi-LSTM</td><td>landmarks</td><td class="n">193,502</td><td class="n">72.84</td><td class="n">71.35</td></tr>
+      <tr><td>Bi-LSTM</td><td>landmarks + bones + motion</td><td class="n">417,758</td><td class="n">87.65</td><td class="n">86.43</td></tr>
+      <tr><td>ST-GCN</td><td>landmarks + bones + motion</td><td class="n">109,024</td><td class="n">96.30</td><td class="n">96.38</td></tr>
+      <tr class="em"><td>HA-GCN</td><td>landmarks + bones + motion</td><td class="n">204,949</td><td class="n">98.77</td><td class="n">98.86</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="qualitative">
+  <h2>Qualitative results</h2>
+  <p>Takes of signer_00 classified by a frozen HA-GCN encoder after calibration with 2 takes per
+  sign (one calibration draw of the transfer experiment above). Successes are the most confident
+  correct predictions of signs not shown in the teaser; failures are the most confident errors.</p>
+
+  <h3>Successes</h3>
+  <div class="grid">
+    <figure>
+      <img src="figures/success_1.gif" loading="lazy" width="360" height="360"
+           alt="Skeleton animation of the sign MAL, predicted correctly as MAL.">
+      <figcaption>MAL, predicted <span class="tag ok">MAL</span></figcaption>
+    </figure>
+    <figure>
+      <img src="figures/success_2.gif" loading="lazy" width="360" height="360"
+           alt="Skeleton animation of the sign ENSEÑAR, predicted correctly as ENSEÑAR.">
+      <figcaption>ENSEÑAR, predicted <span class="tag ok">ENSEÑAR</span></figcaption>
+    </figure>
+    <figure>
+      <img src="figures/success_3.gif" loading="lazy" width="360" height="360"
+           alt="Skeleton animation of the sign PERMISO, predicted correctly as PERMISO.">
+      <figcaption>PERMISO, predicted <span class="tag ok">PERMISO</span></figcaption>
+    </figure>
+  </div>
+
+  <h3>Failures</h3>
+  <div class="grid">
+    <figure>
+      <img src="figures/failure_1.gif" loading="lazy" width="360" height="360"
+           alt="Skeleton animation of the sign YO, wrongly predicted as LO SIENTO.">
+      <figcaption>YO, predicted <span class="tag err">LO SIENTO</span></figcaption>
+    </figure>
+    <figure>
+      <img src="figures/failure_2.gif" loading="lazy" width="360" height="360"
+           alt="Skeleton animation of the sign AGUA, wrongly predicted as BEBER.">
+      <figcaption>AGUA, predicted <span class="tag err">BEBER</span></figcaption>
+    </figure>
+    <figure>
+      <img src="figures/failure_3.gif" loading="lazy" width="360" height="360"
+           alt="Skeleton animation of the sign BLANCO, wrongly predicted as HOLA.">
+      <figcaption>BLANCO, predicted <span class="tag err">HOLA</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="failure-analysis">
+  <h2>Failure analysis</h2>
+  <p>We pool the ProtoNet predictions of the transfer experiment for signer_00: 3 encoders × 10
+  calibration draws, with the remaining takes of each sign as test (11,700 predictions at K = 2,
+  6,300 at K = 8). Accuracy varies strongly across signs. At K = 2 it ranges from 29% for TU and 34%
+  for BLANCO to 94% for NOSOTROS and 92% for POR FAVOR; at K = 8 the hardest signs are still TU
+  (40%), BLANCO (56%) and BEBER (57%).</p>
+  <figure>
+    <img src="figures/per_class_accuracy.png" loading="lazy"
+         alt="Horizontal bar chart of accuracy per sign for K = 2 and K = 8. POR FAVOR, ENSEÑAR and NOSOTROS are above 90% at K = 8; TU, BLANCO and BEBER are the lowest, between 40% and 57% at K = 8.">
+    <figcaption>Accuracy per sign for signer_00, frozen LSA64 encoders with ProtoNet calibration.
+    The dotted line is chance (3.3%).</figcaption>
+  </figure>
+  <p>Errors are spread over many sign pairs: at K = 2 the eight most frequent confusions account for
+  14% of all errors. Some pairs are confused in both directions, such as AGUA and BEBER, and YO and
+  LO SIENTO.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>True sign</th><th>Predicted</th><th class="n">Count (K = 2)</th><th class="n">Share of errors</th></tr></thead>
+    <tbody>
+      <tr><td>YO</td><td>LO SIENTO</td><td class="n">83</td><td class="n">2.4%</td></tr>
+      <tr><td>BAÑO</td><td>EL</td><td class="n">81</td><td class="n">2.4%</td></tr>
+      <tr><td>AGUA</td><td>BEBER</td><td class="n">67</td><td class="n">2.0%</td></tr>
+      <tr><td>PAN</td><td>HOY</td><td class="n">55</td><td class="n">1.6%</td></tr>
+      <tr><td>MAMÁ</td><td>LO SIENTO</td><td class="n">53</td><td class="n">1.5%</td></tr>
+      <tr><td>BLANCO</td><td>MAMÁ</td><td class="n">51</td><td class="n">1.5%</td></tr>
+      <tr><td>BEBER</td><td>AGUA</td><td class="n">49</td><td class="n">1.4%</td></tr>
+      <tr><td>LO SIENTO</td><td>YO</td><td class="n">49</td><td class="n">1.4%</td></tr>
+    </tbody>
+  </table></div>
+  <p>We have not tested why these signs are hard. Possible factors are signs performed in a similar
+  place near the face or chest, hand shapes that the 21 hand keypoints capture poorly, and the gap
+  between Argentinian training signs and Peruvian test signs. The full counts are in
+  <code>results/page/signer00_failure_analysis.json</code>.</p>
+</section>
+
+<section id="limitations">
+  <h2>Limitations</h2>
+  <ul>
+    <li>LSP results rest on two signers and 30 isolated signs; one of the signers is the author of
+    this project.</li>
+    <li>During LSA64 meta-training, the best epoch was selected on the same held-out signers that are
+    reported, so the LSA64 numbers are optimistic. The LSP signers were never used for selection.</li>
+    <li>The LSA64 results are close to their ceiling and are not compared with published results,
+    so they do not discriminate well between methods.</li>
+    <li>The supervised LSP results use one seed and a small test set (81 takes).</li>
+    <li>Prototypical calibration does not outperform a fine-tuned linear head in the transfer
+    setting for K of 2 or more.</li>
+    <li>Every result depends on the detection quality of MediaPipe Holistic; missed hands are only
+    interpolated over time.</li>
+  </ul>
+</section>
+
+<section id="data-ethics">
+  <h2>Data &amp; ethics</h2>
+  <ul>
+    <li><b>Keypoints only.</b> The LSP recordings store MediaPipe Holistic keypoints, not video or
+    images. The keypoints include 20 facial landmarks, which describe facial movement and can carry
+    identifying information, so we treat them as personal data.</li>
+    <li><b>Consent.</b> The skeleton animations on this page show only signer_00, the author, who
+    consents to their use. Recordings of the second signer are not shown or released, pending a signed
+    consent form.</li>
+    <li><b>No faces.</b> Animations draw the body and hands only; the face is replaced by a plain head
+    outline.</li>
+    <li><b>Release.</b> The LSP recordings are not distributed. The repository includes split indices,
+    per-run results and the code to record and prepare new data with consent.</li>
+    <li><b>LSA64.</b> The few-shot experiments use LSA64 (Ronchetti et al.), distributed under CC
+    BY-NC-SA 4.0. Encoders trained on it will be released under the same license.</li>
+    <li><b>Intended use.</b> Research on sign language recognition and signer adaptation. These models
+    are not validated for interpreting, accessibility services or any decision about people, and
+    they must not be used to identify or track signers.</li>
+  </ul>
+</section>
+
+<section id="bibtex">
+  <h2>BibTeX</h2>
+  <div class="bibtex">
+    <button class="copy" type="button" id="copy-bibtex">Copy</button>
+<pre id="bibtex-text">@techreport{salcedo2026lsp,
+  author      = {Salcedo Alvarez, Guillermo Ronie},
+  title       = {Reconocimiento de Lengua de Se{\~n}as Peruana mediante Redes de Grafos
+                 Espacio-Temporales con Atenci{\'o}n a Manos y Calibraci{\'o}n Few-Shot
+                 Multi-Usuario},
+  type        = {Bachelor's research project},
+  institution = {Universidad Nacional de Ingenier{\'i}a},
+  address     = {Lima, Peru},
+  year        = {2026},
+  month       = jul,
+  note        = {In Spanish. English title: Peruvian Sign Language Recognition via
+                 Spatio-Temporal Graph Networks with Hand Attention and Multi-User Few-Shot
+                 Calibration},
+  url         = {https://github.com/guisa17/lsp-stgcn-fewshot}
+}</pre>
+  </div>
+  <p class="protocol">If you use the LSA64 experiments, please also cite: F. Ronchetti, F. Quiroga,
+  C. Estrebou, L. Lanzarini and A. Rosete, "LSA64: An Argentinian Sign Language Dataset", CACIC.</p>
+</section>
+
+<section id="acknowledgments">
+  <h2>Acknowledgments</h2>
+  <p>This work was developed at Universidad Nacional de Ingeniería (UNI), Lima, Peru. We thank the
+  second signer for contributing recordings to the LSP dataset, and the authors of LSA64 for making
+  their dataset available.</p>
+</section>
+
+<footer>
+  <p>Code released under the MIT License. Page layout inspired by the Nerfies project page.</p>
+</footer>
+
+</main>
+<script>
+  document.getElementById("copy-bibtex").addEventListener("click", function () {
+    var button = this;
+    var text = document.getElementById("bibtex-text").textContent;
+    navigator.clipboard.writeText(text).then(function () {
+      button.textContent = "Copied";
+    }, function () {
+      var range = document.createRange();
+      range.selectNodeContents(document.getElementById("bibtex-text"));
+      var selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      button.textContent = "Press Ctrl+C";
+    });
+  });
+</script>
+</body>
+</html>
