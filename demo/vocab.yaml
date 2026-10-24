@@ -1,0 +1,36 @@
+# Target vocabulary of the LSP dataset (30 glosses, written in Spanish as they are signed).
+# `target_takes_per_signer` is only used by the Record and Progress pages to show progress;
+# it does not affect training.
+target_takes_per_signer: 15
+
+classes:
+  - AGUA
+  - AYUDA
+  - BAÑO
+  - BEBER
+  - BIEN
+  - BLANCO
+  - "BUENAS NOCHES"
+  - "BUENOS DIAS"
+  - CHAU
+  - COMER
+  - DISCULPA
+  - EL
+  - ELLA
+  - ENSEÑAR
+  - FAMILIA
+  - FELIZ
+  - GRACIAS
+  - HOLA
+  - HOY
+  - "LO SIENTO"
+  - MAL
+  - MAMÁ
+  - NOSOTROS
+  - PAN
+  - PERMISO
+  - "POR FAVOR"
+  - SENTIR
+  - TRISTE
+  - TU
+  - YO
