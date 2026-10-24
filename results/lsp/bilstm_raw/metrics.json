@@ -1,0 +1,26 @@
+{
+  "exp_name": "bilstm_raw_v2",
+  "model": "bilstm",
+  "streams": [
+    "landmarks"
+  ],
+  "num_params": 193502,
+  "best_val_acc": 0.8148148148148148,
+  "best_epoch": 45,
+  "test_metrics": {
+    "accuracy": 0.7283950617283951,
+    "precision": 0.7536507936507937,
+    "recall": 0.7333333333333333,
+    "f1": 0.7135185185185186
+  },
+  "latency": {
+    "latency_ms": 4.8828580003464594,
+    "fps": 204.79809159493186
+  },
+  "num_classes": 30,
+  "split_sizes": {
+    "train": 378,
+    "val": 81,
+    "test": 81
+  }
+}

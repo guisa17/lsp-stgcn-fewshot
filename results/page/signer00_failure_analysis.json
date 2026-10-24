@@ -1,0 +1,249 @@
+{
+  "signer": "signer_00",
+  "setting": "frozen HA-GCN encoders meta-trained on LSA64, ProtoNet calibration, same calibration draws as Table 3",
+  "analysis": {
+    "2": {
+      "per_class_accuracy": {
+        "AGUA": 0.5666666666666667,
+        "AYUDA": 0.7384615384615385,
+        "BAÑO": 0.3717948717948718,
+        "BEBER": 0.39487179487179486,
+        "BIEN": 0.8948717948717949,
+        "BLANCO": 0.3384615384615385,
+        "BUENAS NOCHES": 0.7538461538461538,
+        "BUENOS DIAS": 0.6282051282051282,
+        "CHAU": 0.6666666666666666,
+        "COMER": 0.7410256410256411,
+        "DISCULPA": 0.7666666666666667,
+        "EL": 0.7384615384615385,
+        "ELLA": 0.841025641025641,
+        "ENSEÑAR": 0.9,
+        "FAMILIA": 0.8769230769230769,
+        "FELIZ": 0.8153846153846154,
+        "GRACIAS": 0.8179487179487179,
+        "HOLA": 0.8717948717948718,
+        "HOY": 0.8846153846153846,
+        "LO SIENTO": 0.6897435897435897,
+        "MAL": 0.8974358974358975,
+        "MAMÁ": 0.49230769230769234,
+        "NOSOTROS": 0.9384615384615385,
+        "PAN": 0.7923076923076923,
+        "PERMISO": 0.8282051282051283,
+        "POR FAVOR": 0.9153846153846154,
+        "SENTIR": 0.6871794871794872,
+        "TRISTE": 0.5333333333333333,
+        "TU": 0.28974358974358977,
+        "YO": 0.5487179487179488
+      },
+      "n_predictions": 11700,
+      "n_errors": 3424,
+      "top_confusions": [
+        {
+          "true": "YO",
+          "predicted": "LO SIENTO",
+          "count": 83,
+          "share_of_errors": 0.024240654205607476
+        },
+        {
+          "true": "BAÑO",
+          "predicted": "EL",
+          "count": 81,
+          "share_of_errors": 0.023656542056074766
+        },
+        {
+          "true": "AGUA",
+          "predicted": "BEBER",
+          "count": 67,
+          "share_of_errors": 0.019567757009345793
+        },
+        {
+          "true": "PAN",
+          "predicted": "HOY",
+          "count": 55,
+          "share_of_errors": 0.01606308411214953
+        },
+        {
+          "true": "MAMÁ",
+          "predicted": "LO SIENTO",
+          "count": 53,
+          "share_of_errors": 0.015478971962616822
+        },
+        {
+          "true": "BLANCO",
+          "predicted": "MAMÁ",
+          "count": 51,
+          "share_of_errors": 0.014894859813084112
+        },
+        {
+          "true": "BEBER",
+          "predicted": "AGUA",
+          "count": 49,
+          "share_of_errors": 0.014310747663551402
+        },
+        {
+          "true": "LO SIENTO",
+          "predicted": "YO",
+          "count": 49,
+          "share_of_errors": 0.014310747663551402
+        }
+      ]
+    },
+    "8": {
+      "per_class_accuracy": {
+        "AGUA": 0.7142857142857143,
+        "AYUDA": 0.8809523809523809,
+        "BAÑO": 0.6571428571428571,
+        "BEBER": 0.5666666666666667,
+        "BIEN": 0.9523809523809523,
+        "BLANCO": 0.5619047619047619,
+        "BUENAS NOCHES": 0.7904761904761904,
+        "BUENOS DIAS": 0.7761904761904762,
+        "CHAU": 0.8428571428571429,
+        "COMER": 0.8571428571428571,
+        "DISCULPA": 0.8476190476190476,
+        "EL": 0.8666666666666667,
+        "ELLA": 0.9476190476190476,
+        "ENSEÑAR": 0.9761904761904762,
+        "FAMILIA": 0.9428571428571428,
+        "FELIZ": 0.8476190476190476,
+        "GRACIAS": 0.8380952380952381,
+        "HOLA": 0.9619047619047619,
+        "HOY": 0.9571428571428572,
+        "LO SIENTO": 0.7,
+        "MAL": 0.9619047619047619,
+        "MAMÁ": 0.7238095238095238,
+        "NOSOTROS": 0.9714285714285714,
+        "PAN": 0.819047619047619,
+        "PERMISO": 0.9666666666666667,
+        "POR FAVOR": 0.9904761904761905,
+        "SENTIR": 0.861904761904762,
+        "TRISTE": 0.7333333333333333,
+        "TU": 0.3952380952380952,
+        "YO": 0.6476190476190476
+      },
+      "n_predictions": 6300,
+      "n_errors": 1143,
+      "top_confusions": [
+        {
+          "true": "TU",
+          "predicted": "MAMÁ",
+          "count": 34,
+          "share_of_errors": 0.02974628171478565
+        },
+        {
+          "true": "BEBER",
+          "predicted": "MAMÁ",
+          "count": 33,
+          "share_of_errors": 0.028871391076115485
+        },
+        {
+          "true": "BAÑO",
+          "predicted": "EL",
+          "count": 32,
+          "share_of_errors": 0.02799650043744532
+        },
+        {
+          "true": "PAN",
+          "predicted": "HOY",
+          "count": 32,
+          "share_of_errors": 0.02799650043744532
+        },
+        {
+          "true": "YO",
+          "predicted": "LO SIENTO",
+          "count": 30,
+          "share_of_errors": 0.026246719160104987
+        },
+        {
+          "true": "AGUA",
+          "predicted": "BEBER",
+          "count": 28,
+          "share_of_errors": 0.024496937882764653
+        },
+        {
+          "true": "FELIZ",
+          "predicted": "GRACIAS",
+          "count": 28,
+          "share_of_errors": 0.024496937882764653
+        },
+        {
+          "true": "BEBER",
+          "predicted": "COMER",
+          "count": 26,
+          "share_of_errors": 0.022747156605424323
+        }
+      ]
+    }
+  },
+  "examples": {
+    "encoder": "hagcn_seed42_encoder.pt",
+    "k": 2,
+    "trial": 0,
+    "teaser": [
+      {
+        "index": 257,
+        "true": "HOLA",
+        "predicted": "HOLA",
+        "confidence": 0.994568943977356
+      },
+      {
+        "index": 249,
+        "true": "GRACIAS",
+        "predicted": "GRACIAS",
+        "confidence": 0.8699325323104858
+      },
+      {
+        "index": 11,
+        "true": "AGUA",
+        "predicted": "AGUA",
+        "confidence": 0.9566487669944763
+      },
+      {
+        "index": 220,
+        "true": "FAMILIA",
+        "predicted": "FAMILIA",
+        "confidence": 0.9245114326477051
+      }
+    ],
+    "success": [
+      {
+        "index": 314,
+        "true": "MAL",
+        "predicted": "MAL",
+        "confidence": 0.9999988079071045
+      },
+      {
+        "index": 198,
+        "true": "ENSEÑAR",
+        "predicted": "ENSEÑAR",
+        "confidence": 0.9991945624351501
+      },
+      {
+        "index": 367,
+        "true": "PERMISO",
+        "predicted": "PERMISO",
+        "confidence": 0.9989773035049438
+      }
+    ],
+    "failure": [
+      {
+        "index": 440,
+        "true": "YO",
+        "predicted": "LO SIENTO",
+        "confidence": 0.9678260684013367
+      },
+      {
+        "index": 14,
+        "true": "AGUA",
+        "predicted": "BEBER",
+        "confidence": 0.9589022397994995
+      },
+      {
+        "index": 86,
+        "true": "BLANCO",
+        "predicted": "HOLA",
+        "confidence": 0.9518634676933289
+      }
+    ]
+  }
+}
