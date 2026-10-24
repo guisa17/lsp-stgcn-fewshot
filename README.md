@@ -109,8 +109,9 @@ the original report (four encoders):
   original files by up to 0.6 points on average when re-run (see `results/VERIFICATION.md`).
 - **No comparison with published LSA64 results.** Table 2 is close to its ceiling (98 to 99.6%) and
   does not discriminate well between encoders or calibration methods.
-- **Signer profile.** signer_00 is the author of this project.
-  <!-- TODO(author): add the LSP proficiency of signer_00. -->
+- **Signer profile.** signer_00 is the author, a hearing non-native signer who has been learning
+  LSP; their productions may differ from those of native Deaf signers. Evaluating with native
+  signers is left for future work.
 - **Scope.** The vocabulary is limited to 30 isolated signs, and every result depends on the
   detection quality of MediaPipe Holistic (missed or misplaced hands are only interpolated).
 
