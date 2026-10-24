@@ -1,0 +1,10 @@
+# Builds the LSP bundle from raw recorded takes (one folder per signer).
+# Raw folders are passed with --raw; they hold personal data and live outside the repository.
+out: data/processed/lsp_v2.npz
+split_out: splits/lsp/intra_subject_v2.json
+smooth_window: 3          # centred moving average over time (frames)
+split:
+  protocol: intra_subject # sample-level, stratified by class; NOT signer-independent
+  seed: 42
+  val_size: 0.15
+  test_size: 0.15

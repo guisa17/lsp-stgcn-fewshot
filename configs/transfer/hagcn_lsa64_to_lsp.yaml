@@ -1,0 +1,29 @@
+# Cross-lingual transfer LSA64 -> LSP (Table 3). The HA-GCN encoders meta-trained on LSA64 are
+# frozen and calibrated with K takes per class of each LSP signer; no LSP data trains the encoder.
+# One encoder per distinct LSA64 signer split (seeds 42, 7, 123).
+mode: transfer
+exp_name: transfer_hagcn_lsa64_to_lsp
+deterministic: true
+device: cpu
+out_root: outputs/transfer
+allow_duplicate_splits: false   # refuse to pool two encoders trained on the same signer split
+
+data:
+  bundle: data/processed/lsp_v2.npz
+
+encoders:
+  - checkpoints/lsa64/hagcn_seed42_encoder.pt
+  - checkpoints/lsa64/hagcn_seed7_encoder.pt
+  - checkpoints/lsa64/hagcn_seed123_encoder.pt
+
+signers:                  # LSP signers and the K values each one can support
+  - id: signer_00         # 15 takes per class
+    ks: [1, 2, 4, 8]
+  - id: signer_01         # 3 takes per class
+    ks: [1, 2]
+
+calibration:
+  n_trials: 10
+  seed: 42
+  finetune_epochs: 40
+  finetune_lr: 0.01

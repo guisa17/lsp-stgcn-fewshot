@@ -1,0 +1,40 @@
+# Skeleton-only media for the project page, from the signer_00 keypoints (the author's own data,
+# used with consent). No video or image of the signer is used: frames are drawn from keypoints and
+# the face is replaced by a plain head outline. Outputs are small GIF/PNG files under docs/figures.
+bundle: data/processed/lsp_signer00_v1.npz
+signer: signer_00
+out_dir: docs/figures
+analysis_out: results/page/signer00_failure_analysis.json
+
+calibration:              # same draws as the signer_00 rows of Table 3
+  encoders:
+    - checkpoints/lsa64/hagcn_seed42_encoder.pt
+    - checkpoints/lsa64/hagcn_seed7_encoder.pt
+    - checkpoints/lsa64/hagcn_seed123_encoder.pt
+  ks: [1, 2, 4, 8]
+  n_trials: 10
+  seed: 42
+  device: cpu
+
+examples:                 # qualitative examples: one encoder, one K=2 trial
+  encoder: checkpoints/lsa64/hagcn_seed42_encoder.pt
+  k: 2
+  trial: 0
+  teaser_classes: [HOLA, GRACIAS, AGUA, FAMILIA]
+  n_success: 3
+  n_failure: 3
+
+analysis:
+  ks: [2, 8]              # K values summarized on the page
+  top_confusions: 8
+
+render:
+  size_px: 360
+  fps: 15
+  head_radius: 0.35       # in shoulder-width units (coordinates are torso-centred and scaled)
+  margin: 0.3
+
+og_image:                 # link preview (Open Graph): three teaser frames on a 1200 x 630 canvas
+  path: docs/figures/og.png
+  size: [1200, 630]
+  frames: [15, 45, 105]

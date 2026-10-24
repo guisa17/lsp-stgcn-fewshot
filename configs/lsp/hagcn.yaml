@@ -1,0 +1,46 @@
+# HA-GCN on the enriched streams (Table 1, row 4).
+# Protocol: intra-subject, sample-level split (signer_01 appears in train and test).
+exp_name: lsp_hagcn
+seed: 42
+deterministic: true
+out_root: outputs/lsp
+
+data:
+  bundle: data/processed/lsp_v2.npz
+  split: splits/lsp/intra_subject_v2.json
+  streams: [landmarks, bones, motion]
+  smooth_window: 3        # must match the value used to build the bundle (used at inference)
+
+model:
+  type: hagcn
+  channels: [32, 64, 64]
+  t_kernel: 9
+  dropout: 0.3
+  drop_graph: 0.1
+
+train:
+  epochs: 150
+  batch_size: 32
+  lr: 0.001
+  weight_decay: 0.0001
+  patience: 20            # early stopping on validation accuracy
+  lr_factor: 0.5          # ReduceLROnPlateau on validation loss
+  lr_patience: 5
+  min_lr: 0.00001
+  num_workers: 0
+  device: cpu
+
+augment:
+  enabled: true
+  temporal_scale: true
+  rotation: true
+  jitter: true
+  mirror: false
+  max_ratio: 0.15         # speed change of up to +/-15%
+  max_deg: 5.0            # rotation of up to +/-5 degrees per axis
+  sigma: 0.01             # jitter standard deviation (normalized units)
+  mirror_p: 0.5
+
+eval:
+  latency_warmup: 5
+  latency_runs: 50

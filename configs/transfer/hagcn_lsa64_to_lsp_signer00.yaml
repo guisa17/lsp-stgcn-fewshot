@@ -1,0 +1,28 @@
+# Table 3, signer_00 rows, from the optional signer_00 keypoint release (lsp_signer00_v1.npz).
+# Same encoders, signer, K values and calibration seed as hagcn_lsa64_to_lsp.yaml. ProtoNet values
+# match that config exactly; fine-tune-K values can differ slightly because signer_01 is absent, which
+# changes the order in which the PyTorch random generator is consumed.
+mode: transfer
+exp_name: transfer_hagcn_lsa64_to_lsp_signer00
+deterministic: true
+device: cpu
+out_root: outputs/transfer
+allow_duplicate_splits: false
+
+data:
+  bundle: data/processed/lsp_signer00_v1.npz
+
+encoders:
+  - checkpoints/lsa64/hagcn_seed42_encoder.pt
+  - checkpoints/lsa64/hagcn_seed7_encoder.pt
+  - checkpoints/lsa64/hagcn_seed123_encoder.pt
+
+signers:
+  - id: signer_00         # 15 takes per class
+    ks: [1, 2, 4, 8]
+
+calibration:
+  n_trials: 10
+  seed: 42
+  finetune_epochs: 40
+  finetune_lr: 0.01

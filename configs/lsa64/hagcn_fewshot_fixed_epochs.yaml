@@ -1,0 +1,50 @@
+# PREPARED, NOT RUN. Alternative fix for the checkpoint-selection leak of hagcn_fewshot.yaml:
+# train for a fixed number of epochs and keep the final weights, so no epoch is selected with
+# test-signer data (validation accuracy is still logged for reference only).
+mode: meta_train
+exp_name: lsa64_hagcn_fewshot_fixed_epochs
+seeds: [42, 7, 123]
+deterministic: true
+device: cuda              # the reported runs used a Colab GPU; override with device=cpu
+out_root: outputs/lsa64
+encoder_dir: checkpoints/lsa64
+
+data:
+  bundle: data/external/lsa64_v1.npz
+  streams: [landmarks, bones, motion]
+
+model:
+  type: hagcn
+  channels: [32, 64, 64]
+  t_kernel: 9
+  dropout: 0.3
+  drop_graph: 0.1
+
+split:
+  n_test_signers: 2
+
+validation:
+  source: test_signers    # test_signers (as in the original runs) | heldout
+  n_val_signers: 0        # used only when source is heldout
+  select_best: false      # keep the weights after the last epoch
+
+pretrain:                 # cross-entropy warm-up on the training signers before meta-training
+  epochs: 10
+  batch_size: 64
+  lr: 0.001
+
+meta:
+  n_way: 5
+  k_shot: 5
+  q_query: 5
+  n_episodes_train: 300
+  n_episodes_val: 60
+  epochs: 50
+  lr: 0.001
+  subject_disjoint: true
+
+calibration:
+  ks: [1, 2, 4]           # LSA64 has 5 repetitions per class and signer, so K=4 is the maximum
+  n_trials: 10
+  finetune_epochs: 40     # fine-tune-K control baseline (linear head on frozen embeddings)
+  finetune_lr: 0.01

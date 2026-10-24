@@ -1,0 +1,10 @@
+# Builds the LSA64 bundle from the Kaggle "SimpleLSA64 Mediapipe Holistic landmarks" export.
+# The export directory is passed with --lsa64-dir.
+out: data/external/lsa64_v1.npz
+splits: [train, test]     # both Kaggle splits are merged; signer splits are made later
+T: 30                     # frames per sequence after linear resampling
+smooth_window: 3
+smoke:                    # quick subset used with --smoke
+  splits: [test]
+  signers: ["001", "002"]
+  classes: ["001", "002", "003", "004", "005"]

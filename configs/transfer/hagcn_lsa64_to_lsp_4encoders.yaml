@@ -1,0 +1,30 @@
+# Reproduces the transfer numbers of the original report (errata, see README).
+# The original report pooled four encoders, but hagcn_seed42_singlerun and hagcn_seed42 were trained on the
+# same LSA64 signer split, so that split was counted twice. Use hagcn_lsa64_to_lsp.yaml instead.
+mode: transfer
+exp_name: transfer_hagcn_lsa64_to_lsp_4encoders
+deterministic: true
+device: cpu
+out_root: outputs/transfer
+allow_duplicate_splits: true    # needed to reproduce the original number
+
+data:
+  bundle: data/processed/lsp_v2.npz
+
+encoders:                 # same order as the original run (alphabetical file names)
+  - checkpoints/lsa64/hagcn_seed42_singlerun_encoder.pt
+  - checkpoints/lsa64/hagcn_seed123_encoder.pt
+  - checkpoints/lsa64/hagcn_seed42_encoder.pt
+  - checkpoints/lsa64/hagcn_seed7_encoder.pt
+
+signers:                  # LSP signers and the K values each one can support
+  - id: signer_00         # 15 takes per class
+    ks: [1, 2, 4, 8]
+  - id: signer_01         # 3 takes per class
+    ks: [1, 2]
+
+calibration:
+  n_trials: 10
+  seed: 42
+  finetune_epochs: 40
+  finetune_lr: 0.01
